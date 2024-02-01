@@ -4,11 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
+	"io"
 	"net/http"
 	"time"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"golang.org/x/net/websocket"
 )
 
 type Todo struct {
@@ -25,6 +27,10 @@ type User struct {
 	Firstname string `json:"firstname"`
 	Lastname  string `json:"lastname"`
 	Age       int    `json:"age"`
+}
+
+func EchoServer(ws *websocket.Conn) {
+	io.Copy(ws, ws)
 }
 
 func main() {
@@ -83,7 +89,6 @@ func main() {
 		json.NewDecoder(r.Body).Decode(&user)
 		fmt.Fprintf(w, "%s %s is %d years old!", user.Firstname, user.Lastname, user.Age)
 	})
-
 	r.HandleFunc("/json/encode", func(w http.ResponseWriter, r *http.Request) {
 		peter := User{
 			Firstname: "John",
@@ -93,6 +98,8 @@ func main() {
 
 		json.NewEncoder(w).Encode(peter)
 	})
+
+	r.Handle("/ws/echo", websocket.Handler(EchoServer))
 
 	// set up static file serving
 	fs := http.FileServer(http.Dir("static/"))
