@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"net/http"
 	"time"
 
@@ -9,9 +10,20 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 )
 
+type Todo struct {
+	Title string
+	Done  bool
+}
+
+type TodoPageData struct {
+	PageTitle string
+	Todos     []Todo
+}
+
 func main() {
 
 	r := chi.NewRouter()
+	tmpl := template.Must(template.ParseFiles("templates/base.html"))
 
 	// A good base middleware stack
 	r.Use(middleware.RequestID)
@@ -24,10 +36,31 @@ func main() {
 	// processing should be stopped
 	r.Use(middleware.Timeout(60 * time.Second))
 
+	// root page handler
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("hi"))
 	})
 
+	// template endpoint
+	r.Get("/todo/{listName}", func(w http.ResponseWriter, r *http.Request) {
+
+		listName := chi.URLParam(r, "listName")
+
+		// create the page data
+		data := TodoPageData{
+			PageTitle: listName,
+			Todos: []Todo{
+				{Title: "Task 1", Done: false},
+				{Title: "Task 2", Done: false},
+				{Title: "Task 3", Done: true},
+			},
+		}
+
+		// render the data in the template
+		tmpl.Execute(w, data)
+	})
+
+	// url parameters endpoint
 	r.HandleFunc("/books/{title}/page/{page}", func(w http.ResponseWriter, r *http.Request) {
 
 		title := chi.URLParam(r, "title")
@@ -37,5 +70,10 @@ func main() {
 
 	})
 
+	// set up static file serving
+	fs := http.FileServer(http.Dir("static/"))
+	r.Handle("/static/*", http.StripPrefix("/static/", fs))
+
+	// launch the server
 	http.ListenAndServe(":3333", r)
 }
