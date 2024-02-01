@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"net/http"
@@ -18,6 +19,12 @@ type Todo struct {
 type TodoPageData struct {
 	PageTitle string
 	Todos     []Todo
+}
+
+type User struct {
+	Firstname string `json:"firstname"`
+	Lastname  string `json:"lastname"`
+	Age       int    `json:"age"`
 }
 
 func main() {
@@ -68,6 +75,23 @@ func main() {
 
 		fmt.Fprintf(w, "You've requested the book: %s on page %s\n", title, page)
 
+	})
+
+	// == endpoints for json encoding ==
+	r.HandleFunc("/json/decode", func(w http.ResponseWriter, r *http.Request) {
+		var user User
+		json.NewDecoder(r.Body).Decode(&user)
+		fmt.Fprintf(w, "%s %s is %d years old!", user.Firstname, user.Lastname, user.Age)
+	})
+
+	r.HandleFunc("/json/encode", func(w http.ResponseWriter, r *http.Request) {
+		peter := User{
+			Firstname: "John",
+			Lastname:  "Doe",
+			Age:       25,
+		}
+
+		json.NewEncoder(w).Encode(peter)
 	})
 
 	// set up static file serving
