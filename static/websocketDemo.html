@@ -8,8 +8,12 @@
   var output = document.getElementById("output")
   var socket = new WebSocket("ws://localhost:3333/ws/echo");
 
-  socket.onpoen = function(){
-    output.innherHTML += "Status: Connected\n"
+  socket.onopen = function(){
+    output.innerHTML += "Status: Connected\n"
+  }
+
+  socket.onclose = function(){
+    output.innerHTML += "Status: Closed Connection \n"
   }
 
   socket.onmessage = function(e){
