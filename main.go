@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"skull/server/handlers"
+	"skull/server/wsServers"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -41,7 +42,20 @@ func main() {
 	r.HandleFunc("/json/decode", handlers.HandleJsonDecode)
 	r.HandleFunc("/json/encode", handlers.HandleJsonEncode)
 
+	// === websocket endpoints ===
+
+	// initial endpoint
 	r.Handle("/ws/echo", websocket.Handler(handlers.EchoServer))
+
+	// echo gorilla endpoint
+	r.HandleFunc("/ws/gorillaEcho", wsServers.HandlerGorillaEcho)
+
+	// Gorilla chat server
+	gorillaHub := wsServers.NewHub()
+	go gorillaHub.Run()
+	r.HandleFunc("/ws/gorillaChat", func(w http.ResponseWriter, r *http.Request) {
+		wsServers.GorillaServeWs(gorillaHub, w, r)
+	})
 
 	// set up static file serving
 	fs := http.FileServer(http.Dir("static/"))

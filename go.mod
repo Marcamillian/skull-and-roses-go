@@ -8,3 +8,4 @@ require (
 )
 
 replace handlers => /handlers
+replace wsServers => /wsServers
