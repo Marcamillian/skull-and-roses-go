@@ -57,6 +57,10 @@ func main() {
 		wsServers.GorillaServeWs(gorillaHub, w, r)
 	})
 
+	// golang.org chatserver
+	golangServer := wsServers.NewServerGolangChat()
+	r.Handle("/ws/golangChat", websocket.Handler(golangServer.HandleWSGolangChat))
+
 	// set up static file serving
 	fs := http.FileServer(http.Dir("static/"))
 	r.Handle("/static/*", http.StripPrefix("/static/", fs))
