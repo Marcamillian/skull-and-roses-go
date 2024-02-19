@@ -56,9 +56,27 @@ func (s *Server) readLoop(ws *websocket.Conn) {
 		}
 
 		// use the message contents
-		msg := buf[:n]
-		fmt.Println(string(msg))
 
-		ws.Write([]byte("Thanks for the message"))
+		msg := buf[:n]
+		fmt.Println("incoming message: ", string(msg))
+
+		//ws.Write([]byte("Thanks for the message"))
+
+		// send message to all connections
+		s.broadcast(msg)
+	}
+}
+
+func (s *Server) broadcast(b []byte) {
+
+	// loop through the connections in server.conns
+	for ws := range s.conns {
+		// immediately imnvoked function
+		go func(ws *websocket.Conn) {
+			// try to write to the websocket connection
+			if _, err := ws.Write(b); err != nil {
+				fmt.Println("write error: ", err)
+			}
+		}(ws)
 	}
 }
