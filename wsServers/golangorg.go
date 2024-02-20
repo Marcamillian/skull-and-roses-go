@@ -22,6 +22,7 @@ type Server struct {
 	conns map[*websocket.Conn]bool
 }
 
+// instanciates a new server
 func NewServerGolangChat() *Server {
 	return &Server{
 		conns: make(map[*websocket.Conn]bool),
@@ -37,7 +38,7 @@ func (s *Server) HandleWSGolangChat(ws *websocket.Conn) {
 	s.readLoop(ws)
 }
 
-// constantly open loop that reads data out of incoming messages
+// constantly open loop that reads data out of incoming messages & send it to all connected clients
 func (s *Server) readLoop(ws *websocket.Conn) {
 	buf := make([]byte, 1024)
 
@@ -60,13 +61,12 @@ func (s *Server) readLoop(ws *websocket.Conn) {
 		msg := buf[:n]
 		fmt.Println("incoming message: ", string(msg))
 
-		//ws.Write([]byte("Thanks for the message"))
-
 		// send message to all connections
 		s.broadcast(msg)
 	}
 }
 
+// send a message to all connected websockets
 func (s *Server) broadcast(b []byte) {
 
 	// loop through the connections in server.conns

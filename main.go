@@ -42,21 +42,6 @@ func main() {
 	r.HandleFunc("/json/decode", handlers.HandleJsonDecode)
 	r.HandleFunc("/json/encode", handlers.HandleJsonEncode)
 
-	// === websocket endpoints ===
-
-	// initial endpoint
-	r.Handle("/ws/echo", websocket.Handler(handlers.EchoServer))
-
-	// echo gorilla endpoint
-	r.HandleFunc("/ws/gorillaEcho", wsServers.HandlerGorillaEcho)
-
-	// Gorilla chat server
-	gorillaHub := wsServers.NewHub()
-	go gorillaHub.Run()
-	r.HandleFunc("/ws/gorillaChat", func(w http.ResponseWriter, r *http.Request) {
-		wsServers.GorillaServeWs(gorillaHub, w, r)
-	})
-
 	// golang.org chatserver
 	golangServer := wsServers.NewServerGolangChat()
 	r.Handle("/ws/golangChat", websocket.Handler(golangServer.HandleWSGolangChat))
