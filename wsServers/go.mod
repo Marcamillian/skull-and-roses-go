@@ -1,4 +1,4 @@
-module skull/server/wsServers
+module example.com/skull/wsServers
 
 go 1.21.6
 

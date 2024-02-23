@@ -6,27 +6,6 @@ import (
 	"github.com/lxzan/gws"
 )
 
-/*
-func getUpgrader()gws.Upgrader{
-	return gws.NewUpgrader(&Handler{}, &gws.ServerOption{
-		CheckUtf8Enabled: true,
-		Recovery:         gws.Recovery,
-		PermessageDeflate: gws.PermessageDeflate{
-			Enabled:               true,
-			ServerContextTakeover: true,
-			ClientContextTakeover: true,
-		},
-	})
-}
-*/
-
-/*
-func HandlerGWSEcho(writer http.ResponseWriter, request *http.Request){
-	socket, err := socket.==
-}
-
-*/
-
 type Handler struct {
 	gws.BuiltinEventHandler
 }

@@ -1,11 +1,14 @@
+// Package main creates a webserver to run an implemenation
+//
+// This is a descirption of the package that we need
 package main
 
 import (
 	"net/http"
 	"time"
 
-	"skull/server/handlers"
-	"skull/server/wsServers"
+	"example.com/skull/handlers"
+	"example.com/skull/wsServers"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -43,7 +46,7 @@ func main() {
 	r.HandleFunc("/json/encode", handlers.HandleJsonEncode)
 
 	// golang.org chatserver
-	golangServer := wsServers.NewServerGolangChat()
+	golangServer := wsServers.NewWsGolangServerChat()
 	r.Handle("/ws/golangChat", websocket.Handler(golangServer.HandleWSGolangChat))
 
 	// set up static file serving

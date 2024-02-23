@@ -1,4 +1,4 @@
-module server/skull
+module example.com/skull
 
 go 1.21.6
 
