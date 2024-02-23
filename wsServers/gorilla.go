@@ -12,6 +12,9 @@ func ServerTypeGorilla() string {
 	return "gorilla server"
 }
 
+// HandlerGorillaEcho is a handler (implements the handler interface) to echo back messages on a websocket connection
+//
+// relies on the
 func HandlerGorillaEcho(w http.ResponseWriter, r *http.Request) {
 	conn, _ := upgrader.Upgrade(w, r, nil)
 

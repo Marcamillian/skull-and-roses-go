@@ -1,3 +1,6 @@
+// Package wsServers provides various websocket impementations
+//
+// Some extra information about things
 package wsServers
 
 import (
@@ -11,26 +14,33 @@ func ServerTypeGoLang() string {
 	return "golang server"
 }
 
+// HandlerGolangEcho is a handler that takes a websocket connection and returns the submitted message content
 func HandlerGolangEcho(ws *websocket.Conn) {
 	io.Copy(ws, ws)
 }
 
-// == tutorial from Anthony GG - https://www.youtube.com/watch?v=JuUAEYLkGbM
-
-type Server struct {
+// A wsGolangServerChat tracks the websocket connections to the server
+//
+// based on a tutorial from Anthony GG - https://www.youtube.com/watch?v=JuUAEYLkGbM
+type wsGolangServerChat struct {
 	// TODO:Marc - might be wise to make this a mutex - so we can lock it if we happen to operate on it with separate operations
-	conns map[*websocket.Conn]bool
+	conns map[*websocket.Conn]bool //
 }
 
-// instanciates a new server
-func NewServerGolangChat() *Server {
-	return &Server{
+// NewWsGolangServerChat provides a server instance that allows for websocket communication
+//
+// based on a tutorial from Anthony GG - https://www.youtube.com/watch?v=JuUAEYLkGbM
+func NewWsGolangServerChat() *wsGolangServerChat {
+	return &wsGolangServerChat{
 		conns: make(map[*websocket.Conn]bool),
 	}
 }
 
-// endpoint to initiate & keep the connection open
-func (s *Server) HandleWSGolangChat(ws *websocket.Conn) {
+// HandleWsGolangChat is a handler to create & keep open a websocket connection
+//
+// The readLoop function loops for the life of the connection and reads in messages and broadcasts the message to all connected clients
+// based on a tutorial from Anthony GG - https://www.youtube.com/watch?v=JuUAEYLkGbM
+func (s *wsGolangServerChat) HandleWSGolangChat(ws *websocket.Conn) {
 	fmt.Println("new incoming connection from client:", ws.RemoteAddr())
 
 	s.conns[ws] = true // store the connection
@@ -38,8 +48,10 @@ func (s *Server) HandleWSGolangChat(ws *websocket.Conn) {
 	s.readLoop(ws)
 }
 
-// constantly open loop that reads data out of incoming messages & send it to all connected clients
-func (s *Server) readLoop(ws *websocket.Conn) {
+// readLoop is a method that constantly loops, reading data out of incoming messages & send it to all connected clients
+//
+// based on a tutorial from Anthony GG - https://www.youtube.com/watch?v=JuUAEYLkGbM
+func (s *wsGolangServerChat) readLoop(ws *websocket.Conn) {
 	buf := make([]byte, 1024)
 
 	// loop for the life of the connection
@@ -66,8 +78,10 @@ func (s *Server) readLoop(ws *websocket.Conn) {
 	}
 }
 
-// send a message to all connected websockets
-func (s *Server) broadcast(b []byte) {
+// broadcast is a method that sends a message to all connected websockets
+//
+// // based on a tutorial from Anthony GG - https://www.youtube.com/watch?v=JuUAEYLkGbM
+func (s *wsGolangServerChat) broadcast(b []byte) {
 
 	// loop through the connections in server.conns
 	for ws := range s.conns {

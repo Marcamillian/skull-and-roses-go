@@ -39,13 +39,9 @@ var upgrader = websocket.Upgrader{
 
 // Client is a middleman between the websocket connection and the hub.
 type Client struct {
-	hub *Hub
-
-	// The websocket connection.
-	conn *websocket.Conn
-
-	// Buffered channel of outbound messages.
-	send chan []byte
+	hub  *Hub
+	conn *websocket.Conn // The websocket connection.
+	send chan []byte     // Buffered channel of outbound messages.
 }
 
 // readPump pumps messages from the websocket connection to the hub.

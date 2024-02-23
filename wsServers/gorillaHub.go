@@ -6,20 +6,18 @@ package wsServers
 
 // Hub maintains the set of active clients and broadcasts messages to the
 // clients.
+//
+// // Copyright 2013 The Gorilla WebSocket Authors. All rights reserved.
 type Hub struct {
-	// Registered clients.
-	clients map[*Client]bool
-
-	// Inbound messages from the clients.
-	broadcast chan []byte
-
-	// Register requests from the clients.
-	register chan *Client
-
-	// Unregister requests from clients.
-	unregister chan *Client
+	clients    map[*Client]bool // Registered clients.
+	broadcast  chan []byte      // Inbound messages from the clients.
+	register   chan *Client     // Register requests from the clients.
+	unregister chan *Client     // Unregister requests from clients.
 }
 
+// NewHub returns a new Hub that contains clients
+//
+// // Copyright 2013 The Gorilla WebSocket Authors. All rights reserved.
 func NewHub() *Hub {
 	return &Hub{
 		broadcast:  make(chan []byte),
@@ -29,6 +27,9 @@ func NewHub() *Hub {
 	}
 }
 
+// Run is a method that loops to accept new connections, messages and broadcast the messages
+//
+// Copyright 2013 The Gorilla WebSocket Authors. All rights reserved.
 func (h *Hub) Run() {
 	for {
 		select {
