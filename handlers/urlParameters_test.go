@@ -42,8 +42,6 @@ func TestHandleBookRequest(t *testing.T) {
 			status, http.StatusOK)
 	}
 
-	fmt.Println("Something is wrong")
-
 	// check the body of the code
 	if rr.Body.String() != expectedResponse {
 		t.Errorf("handler returned unexpected body: got %v want %v",
