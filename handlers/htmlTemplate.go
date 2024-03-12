@@ -4,6 +4,8 @@ import (
 	"html/template"
 	"net/http"
 
+	"example.com/skull/templates"
+
 	"github.com/go-chi/chi/v5"
 )
 
@@ -19,9 +21,9 @@ type TodoPageData struct {
 
 func HandleTodoList(w http.ResponseWriter, r *http.Request) {
 
-	listName := chi.URLParam(r, "listName")
+	var importedTemplate *template.Template = templates.GetUsableTemplate("templateFiles/base.go.html")
 
-	tmpl := template.Must(template.ParseFiles("templates/base.html"))
+	listName := chi.URLParam(r, "listName")
 
 	// create the page data
 	data := TodoPageData{
@@ -33,6 +35,5 @@ func HandleTodoList(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
-	// render the data in the template
-	tmpl.Execute(w, data)
+	importedTemplate.Execute(w, data)
 }

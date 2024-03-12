@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<head>
+  <title>{{.PageTitle}} </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+
+<body>
+  <h1>{{.PageTitle}}</h1>
+
+  <ul>
+    {{range .Todos}}
+      {{ if .Done}}
+        <li class="done">{{.Title}}</li>
+      {{ else }}
+        <li>{{.Title}}</li>
+      {{end}}
+    {{end}}
+  </ul>
+  <script src="/static/js/index.js" type="text/javascript"></script>
+</body>

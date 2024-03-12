@@ -14,3 +14,5 @@ require (
 replace handlers => /handlers
 
 replace wsServers => /wsServers
+
+replace templates => /templates

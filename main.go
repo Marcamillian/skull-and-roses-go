@@ -1,6 +1,7 @@
 // Package main creates a webserver to run an implemenation
 //
 // This is a descirption of the package that we need
+
 package main
 
 import (
@@ -9,7 +10,6 @@ import (
 
 	"example.com/skull/handlers"
 	"example.com/skull/wsServers"
-
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"golang.org/x/net/websocket"
